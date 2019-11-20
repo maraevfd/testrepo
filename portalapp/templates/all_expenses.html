@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<a href='{% url "base" %}'>To start page</a><br>
+{% for element in expenses %}
+    <li>{{ element }}</li>
+{% endfor %}
+
+{% endblock content %}

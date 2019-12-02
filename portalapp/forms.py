@@ -1,8 +1,8 @@
 from django import forms
+from .models import Expense
 
 
-class AddCategory(forms.Form):
-    name = forms.CharField(max_length=140)
-    slug = forms.SlugField()
-    total_expense = forms.FloatField(default=0)
-    limit = forms.FloatField(default=100)
+class ExpenseForm(forms.ModelForm):
+    class Meta:
+        model = Expense
+        fields = ('category', 'title', 'expense')

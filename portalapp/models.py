@@ -1,5 +1,7 @@
+from _decimal import Decimal
+from django.core.validators import MinValueValidator
 from django.db import models
-from django.shortcuts import render, reverse
+from django.shortcuts import reverse
 
 
 class Category(models.Model):
@@ -8,22 +10,24 @@ class Category(models.Model):
     total_expense = models.FloatField(default=0)
     limit = models.FloatField(default=100)
 
+    def get_absolute_url(self):
+        return reverse('by_category',
+                       args=[self.slug])
+
     def __str__(self):
         return self.name
-
-    def get_absolute_url(self):
-        return reverse('people.views.details', args=[str(self.id)])
 
 
 class Expense(models.Model):
 
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     title = models.CharField(max_length=100)
-    expense = models.FloatField(default=0)
-    date = models.DateField(auto_now=True)
+    expense = models.FloatField(default=0, validators=[MinValueValidator(Decimal('0.001'))])
+    date = models.DateField(auto_now_add=True)
 
     def __str__(self):
-        return "Расходы в количестве {} руб. потрачено на категорию {}"\
-            .format(self.expense, self.category.name)
+        return self.title
 
+    class Meta:
+        ordering = ('-date',)
 

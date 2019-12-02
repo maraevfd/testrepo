@@ -1,32 +1,49 @@
-from django.shortcuts import render
-from django.views import View
+from django.shortcuts import render, get_object_or_404
 from portalapp.models import Category, Expense
-from django.views.generic.list import ListView
+from portalapp.forms import ExpenseForm
 
 
-class BaseView(View):
-
-    template_name = 'base.html'
-
-    def get(self, request):
-        categories = Category.objects.all()
-        context = {
-            'categories': categories
-        }
-        return render(request, self.template_name, context)
+def start_page(request):
+    all_categories = Category.objects.all()
+    context = {'all_categories': all_categories}
+    return render(request, 'base.html', context)
 
 
-class ExpenseListView(ListView):
+def show_all(request):
+    all_expenses = Expense.objects.all()
+    amount = 0
+    for expense in all_expenses:
+        amount += expense.expense
+    context = {'all_expenses': all_expenses, 'amount': amount}
+    return render(request, 'all_expenses.html', context)
 
-    template_name = 'all_expenses.html'
-    model = Expense
 
-    def get_context_data(self, *args, **kwargs):
-        context = {'expenses': self.model.objects.all()}
-        return context
+def by_category(request, slug):
+    category = Category.objects.get(slug=slug)
+    expenses_by_category = Expense.objects.filter(category__slug=slug)
+    amount = 0
+    for expense in expenses_by_category:
+        amount += expense.expense
+    return render(request, 'by_category.html', {'all_expenses': expenses_by_category,
+                                                'amount': amount,
+                                                'category': category},
+                  )
 
 
-def show_last(request):
-    latest_expense_list = Expense.objects.order_by('date')[:1]
-    context = {'latest_expense_list': latest_expense_list}
-    return render(request, 'show_last.html', context)
+def add_expense(request):
+    if request.method == "POST":
+        expense_form = ExpenseForm(data=request.POST)
+        if expense_form.is_valid():
+            new_expense = expense_form.save(commit=False)
+            new_expense.save()
+            all_expenses = Expense.objects.filter(category__id=new_expense.category.id)
+            amount = 0
+            for expense in all_expenses:
+                amount += expense.expense
+            return render(request,
+                          'success_add.html',
+                          {'expense': new_expense,
+                           'amount': amount})
+    else:
+        expense_form = ExpenseForm()
+        return render(request, "new_exp.html", {"form": expense_form})

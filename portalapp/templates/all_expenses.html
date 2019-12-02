@@ -1,9 +1,16 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<a href='{% url "base" %}'>To start page</a><br>
-{% for element in expenses %}
-    <li>{{ element }}</li>
-{% endfor %}
-
-{% endblock content %}
+{% if not all_expenses %}
+    There are no expenses yet
+{% else %}
+<h1>Expenses for all categories are {{amount}} rubles</h1><br>
+    {% for expense in all_expenses %}
+        <div>
+            <h3>{{ expense }} in {{ expense.category }}</h3>
+            <p>You spent {{ expense.expense }} rubles to bye {{ expense }}</p>
+            <p>{{ expense.date|date:"d.m.Y." }}</p><br>
+        </div>
+    {% endfor %}
+{% endif %}
+{% endblock %}

@@ -1,9 +1,0 @@
-{% extends 'base.html' %}
-
-{% block content %}
-<a href='{% url "base" %}'>To start page</a><br>
-{% for element in latest_expense_list %}
-    <li>{{ element }}</li>
-{% endfor %}
-
-{% endblock content %}

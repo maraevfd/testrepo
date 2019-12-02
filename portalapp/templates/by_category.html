@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block content%}
+<h1>Category {{category}} </h1><br>
+<h2>Total costs per category are {{amount}} rubles</h2><br>
+{% for expense in all_expenses %}
+    <h3>{{expense}}</h3>
+    <p>{{expense.expense}} rubles were spent on this purchase {{ expense.date|date:"d.m.Y." }}</p><br>
+{% endfor %}
+{% endblock%}

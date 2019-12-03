@@ -14,15 +14,15 @@
         {% block content %}
 
         <a href='{% url "expenses" %}'>All expenses</a><br>
-        <a href='{% url "add_expense" %}'>Add new expense</a><br>
-
-
-            {% for category in all_categories %}
-            <a href="{{category.get_absolute_url}}">{{ category }}</a><br>
-            {% endfor %}<br>
-            {% csrf_token %}
-
-
+        <a href='{% url "add_expense" %}'>Add new expense</a>
+            <br>
+            <br>
+            <ul>
+                <p>All categories</p>
+                {% for category in all_categories %}
+                <li><a href="{{category.get_absolute_url}}">{{ category }}</a></li>
+                 {% endfor %}
+            </ul>
         <div class="container">
         <img src="{% static 'portalapp/goldcoins.jpg' %}" class="img-thumbnail">
         <hr>

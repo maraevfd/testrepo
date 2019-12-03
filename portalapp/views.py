@@ -44,6 +44,5 @@ def add_expense(request):
                           'success_add.html',
                           {'expense': new_expense,
                            'amount': amount})
-    else:
-        expense_form = ExpenseForm()
-        return render(request, "new_exp.html", {"form": expense_form})
+    expense_form = ExpenseForm()
+    return render(request, "new_exp.html", {"form": expense_form})

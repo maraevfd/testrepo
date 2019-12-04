@@ -7,12 +7,10 @@ from django.shortcuts import reverse
 class Category(models.Model):
     name = models.CharField(max_length=140)
     slug = models.SlugField()
-    total_expense = models.FloatField(default=0)
     limit = models.FloatField(default=100)
 
     def get_absolute_url(self):
-        return reverse('by_category',
-                       args=[self.slug])
+        return reverse('by_category', args=[self.slug])
 
     def __str__(self):
         return self.name

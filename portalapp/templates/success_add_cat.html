@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+
+{% block content%}
+<h1>You added new category {{category}}!</h1>
+<p>Would you like to add a new expense to the category {{category}}?</p>
+<a href='{% url "add_expense" %}'>Add new expense</a>
+{% endblock%}

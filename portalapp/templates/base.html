@@ -16,13 +16,15 @@
         <a href='{% url "expenses" %}'>All expenses</a><br>
         <a href='{% url "add_expense" %}'>Add new expense</a>
             <br>
-            <br>
-            <ul>
-                <p>All categories</p>
-                {% for category in all_categories %}
-                <li><a href="{{category.get_absolute_url}}">{{ category }}</a></li>
-                 {% endfor %}
-            </ul>
+
+            <form action="../">
+                <select name="navigation">
+                    {% for category in all_categories %}
+                    <option value="{{category.get_absolute_url}}">{{ category }}</option>
+                    {% endfor %}
+                </select>
+                <input type="button" value="More details" onclick="ob=this.form.navigation;window.open(ob.options[ob.selectedIndex].value)"/></form>
+
         <div class="container">
         <img src="{% static 'portalapp/goldcoins.jpg' %}" class="img-thumbnail">
         <hr>
@@ -32,7 +34,7 @@
         {% endblock%}
         <p>
         <a href="{% url 'home' %}" class="btn btn-success btn-lg">Главная страница</a>
-        <a href="/news" class="btn btn-primary btn-lg">Узнать больше &raquo;</a>
+        <a href="{% url 'add_category' %}" class="btn btn-primary btn-lg">Add new category &raquo;</a>
         </p>
         </div>
     </div>

@@ -1,6 +1,7 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from portalapp.models import Category, Expense
-from portalapp.forms import ExpenseForm, CategoryForm
+from portalapp.forms import ExpenseForm, CategoryForm, SendEmailForm
+from django.core.mail import send_mail
 
 
 def start_page(request):
@@ -20,10 +21,16 @@ def by_category(request, slug):
     category = Category.objects.get(slug=slug)
     expenses_by_category = Expense.objects.filter(category__slug=slug)
     amount = sum([element.expense for element in expenses_by_category])
+    exceeded = False
+    difference = category.limit - amount
+    if amount > category.limit:
+        exceeded = True
+        difference = -difference
     return render(request, 'by_category.html', {'all_expenses': expenses_by_category,
                                                 'amount': amount,
-                                                'category': category},
-                  )
+                                                'category': category,
+                                                'exceeded': exceeded,
+                                                'difference': difference})
 
 
 def add_expense(request):
@@ -53,3 +60,29 @@ def add_category(request):
                           {'category': new_category})
     category_form = CategoryForm()
     return render(request, "new_cat.html", {"form": category_form})
+
+
+def send_email(request, category_id):
+    obj = get_object_or_404(Category, id=category_id)
+    expenses = Expense.objects.filter(category__id=category_id)
+    sent = False
+    if request.method == "POST":
+        form = SendEmailForm(request.POST)
+        if form.is_valid():
+            cd = form.cleaned_data
+            obj_url = request.build_absolute_uri(obj.get_absolute_url())
+            subject = "This is a report by category {}".format(obj.name)
+            message = ''
+            for expense in expenses:
+                message += '{} {} purchased. Spent {} rubles\n'.format(expense.date,
+                                                                       expense,
+                                                                       expense.expense)
+            message += "Open category {} \n\nAdded comment: {}".format(obj_url,
+                                                                       cd['comment'])
+            send_mail(subject, message, 'admin@mycost_accounting.com', [cd['address']])
+            sent = True
+    else:
+        form = SendEmailForm()
+    return render(request, 'send.html', {'category': obj,
+                                         'form': form,
+                                         'sent': sent})

@@ -12,3 +12,8 @@ class CategoryForm(forms.ModelForm):
     class Meta:
         model = Category
         fields = ('name', 'limit')
+
+
+class SendEmailForm(forms.Form):
+    address = forms.EmailField()
+    comment = forms.CharField(required=False, widget=forms.Textarea)

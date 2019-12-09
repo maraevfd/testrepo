@@ -7,4 +7,5 @@ urlpatterns = [
     path('add_expense/', views.add_expense, name='add_expense'),
     path('add_category/', views.add_category, name='add_category'),
     path('<slug:slug>/', views.by_category, name='by_category'),
+    path('<int:category_id>/send/', views.send_email, name='send_email')
 ]

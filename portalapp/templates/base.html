@@ -14,8 +14,9 @@
         {% block content %}
 
         <a href='{% url "expenses" %}'>All expenses</a><br>
-        <a href='{% url "add_expense" %}'>Add new expense</a>
-            <br>
+        <a href='{% url "add_expense" %}'>Add new expense</a><br>
+        <a href='{% url "add_category" %}'>Add new category</a><br>
+            <hr>
 
             <form action="../">
                 <select name="navigation">
@@ -25,16 +26,40 @@
                 </select>
                 <input type="button" value="More details" onclick="ob=this.form.navigation;window.open(ob.options[ob.selectedIndex].value)"/></form>
 
-        <div class="container">
-        <img src="{% static 'portalapp/goldcoins.jpg' %}" class="img-thumbnail">
+            <div class="container">
+        <img src="{% static 'portalapp/goldcoins.jpg' %}" class="img-thumbnail"><br>
+        <hr>
+        <h2>Payroll history</h2><br>
+        {% if income > 0 %}
+                <h3>You have {{income}} rubles!</h3>
+        {% else %}
+                <h3>You have debt {{income}} rubles!</h3>
+        {% endif%}
+        <table cellspacing="5" cellpadding="5" border="1">
+        <tr>
+            <th>Date</th>
+            <th>Amount of salary</th>
+        </tr>
+        {% if salaries %}
+            {% for salary in salaries %}
+        <tr>
+          <td>{{ salary.date|date:"d.m.Y." }}</td>
+          <td>{{ salary }} rubles</td>
+        </tr>
+            {% endfor %}
+        {% else %}
+            <h3>You did not have a salary yet</h3>
+        {% endif %}
+         </table>
+
         <hr>
         &copy; All rights reserved 2019
         </div>
 
         {% endblock%}
         <p>
-        <a href="{% url 'home' %}" class="btn btn-success btn-lg">Главная страница</a>
-        <a href="{% url 'add_category' %}" class="btn btn-primary btn-lg">Add new category &raquo;</a>
+        <a href="{% url 'home' %}" class="btn btn-success btn-lg">Main page</a>
+        <a href="{% url 'get_salary' %}" class="btn btn-primary btn-lg">I got a salary! HOORAY &raquo;</a>
         </p>
         </div>
     </div>

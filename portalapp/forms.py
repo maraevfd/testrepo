@@ -1,5 +1,5 @@
 from django import forms
-from .models import Expense, Category
+from .models import Expense, Category, Salary
 
 
 class ExpenseForm(forms.ModelForm):
@@ -11,7 +11,13 @@ class ExpenseForm(forms.ModelForm):
 class CategoryForm(forms.ModelForm):
     class Meta:
         model = Category
-        fields = ('name', 'limit')
+        fields = ('name',)
+
+
+class SalaryForm(forms.ModelForm):
+    class Meta:
+        model = Salary
+        fields = ('amount',)
 
 
 class SendEmailForm(forms.Form):

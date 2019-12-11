@@ -4,12 +4,6 @@
 <h1>Category {{category}} </h1>
 <a href="{% url 'send_email' category.id %}">Send report on this category</a><br>
 <h2>Total costs per category are {{amount}} rubles</h2><br>
-{% if exceeded %}
-    <h2>The limit exceeded by {{difference}} rubles!</h2>
-    <h5>Advice: sell your purchase (more expensive than bought)</h5><br>
-{% else %}
-    <h2>The limit is not exceeded. {{difference}} rubles left to exceed</h2><br>
-{% endif %}
 {% for expense in all_expenses %}
     <h3>{{expense}}</h3>
     <p>{{expense.expense}} rubles were spent on this purchase {{ expense.date|date:"d.m.Y." }}</p><br>

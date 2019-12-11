@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block content%}
+<h1>You added new amount of salary {{new_salary}} rubles!!!</h1><br>
+{% if new_salary.amount > 1000 %}
+    <h2>Great salary! Work more and soon you will buy a house :)</h2>
+{% elif 500 <= new_salary.amount and new_salary.amount <= 1000 %}
+    <h2>Good salary! But still there is something to strive for</h2>
+{% else %}
+    <h2>The salary is quite low, maybe you should change jobs?</h2>
+{% endif %}
+<br>
+{% if income > 0 %}
+    <h2>You have {{income}} rubles! You can spend it</h2><br>
+    <a href='{% url "add_expense" %}'>Add new expense</a>
+{% else %}
+    <h2>I don’t know where you got the money from. Do you live in debt? Your debt is {{income}} rubles</h2>
+{% endif %}
+
+{% endblock%}

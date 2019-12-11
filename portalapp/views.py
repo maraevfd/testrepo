@@ -1,36 +1,64 @@
-from django.shortcuts import render, get_object_or_404
-from portalapp.models import Category, Expense
-from portalapp.forms import ExpenseForm, CategoryForm, SendEmailForm
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+from django.shortcuts import render, get_object_or_404, render_to_response
+from portalapp.models import Category, Expense, Salary
+from portalapp.forms import ExpenseForm, CategoryForm, SalaryForm, SendEmailForm
 from django.core.mail import send_mail
+
+
+def get_income():
+    all_expenses = Expense.objects.all()
+    all_salaries = Salary.objects.all()
+    income = sum([element.amount for element in all_salaries]) - sum(
+                [element.expense for element in all_expenses])
+    return income
 
 
 def start_page(request):
     all_categories = Category.objects.all()
-    context = {'all_categories': all_categories}
+    salaries = Salary.objects.all()
+    income = get_income()
+    context = {'all_categories': all_categories,
+               'salaries': salaries,
+               'income': income}
     return render(request, 'base.html', context)
+
+
+def get_a_salary(request):
+    if request.method == "POST":
+        salary_form = SalaryForm(data=request.POST)
+        if salary_form.is_valid():
+            new_salary = salary_form.save()
+            income = get_income()
+            return render(request,
+                          'success_add_salary.html',
+                          {'new_salary': new_salary,
+                           'income': income})
+    salary_form = SalaryForm()
+    return render(request, "new_salary.html", {"form": salary_form})
 
 
 def show_all(request):
     all_expenses = Expense.objects.all()
+    paginator = Paginator(all_expenses, 5)
+    page = request.GET.get('page')
+    try:
+        expenses = paginator.page(page)
+    except PageNotAnInteger:
+        expenses = paginator.page(1)
+    except EmptyPage:
+        expenses = paginator.page(paginator.num_pages)
     amount = sum([element.expense for element in all_expenses])
-    context = {'all_expenses': all_expenses, 'amount': amount}
-    return render(request, 'all_expenses.html', context)
+    context = {'expenses': expenses, 'amount': amount}
+    return render_to_response('all_expenses.html', context)
 
 
 def by_category(request, slug):
     category = Category.objects.get(slug=slug)
-    expenses_by_category = Expense.objects.filter(category__slug=slug)
-    amount = sum([element.expense for element in expenses_by_category])
-    exceeded = False
-    difference = category.limit - amount
-    if amount > category.limit:
-        exceeded = True
-        difference = -difference
-    return render(request, 'by_category.html', {'all_expenses': expenses_by_category,
+    exp_by_catg = Expense.objects.filter(category__slug=slug)
+    amount = sum([element.expense for element in exp_by_catg])
+    return render(request, 'by_category.html', {'all_expenses': exp_by_catg,
                                                 'amount': amount,
-                                                'category': category,
-                                                'exceeded': exceeded,
-                                                'difference': difference})
+                                                'category': category,})
 
 
 def add_expense(request):

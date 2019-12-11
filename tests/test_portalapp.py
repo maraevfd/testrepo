@@ -1,7 +1,6 @@
 from django.test import TestCase, Client
 from portalapp import models
 from django.contrib.auth.models import User
-
 import ddt
 import mock
 
@@ -27,8 +26,7 @@ class ExpenseTestClass(TestCase):
     def test_slug_created(self, name):
         """Test slug={} created correctyly"""
         response = self.client.post('/add_category/',
-                                    {'name': name,
-                                     'limit': 500})
+                                    {'name': name})
         self.assertEqual(models.Category.objects.get().slug,
                          name)
 
@@ -40,15 +38,14 @@ class ExpenseTestClass(TestCase):
     @ddt.unpack
     def test_slug_created_correctly(self, name, expected_slug):
         response = self.client.post('/add_category/',
-                                    {'name': name,
-                                     'limit': 500})
+                                    {'name': name})
         self.assertEqual(models.Category.objects.get().slug,
                          expected_slug)
 
-    def _create_category(self):
+    @staticmethod
+    def _create_category():
         category = models.Category(slug='slug',
-                                   name='Some name',
-                                   limit=500)
+                                   name='Some name')
         category.save()
         return category
 

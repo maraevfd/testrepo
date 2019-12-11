@@ -8,19 +8,19 @@
     <div id="post">
         {% for expense in expenses %}
             <div>
-                <h3>{{ expense }} in {{ expense.category }}</h3>
-                <p>You spent {{ expense.expense }} rubles to bye {{ expense }}</p>
-                <p>{{ expense.date|date:"d.m.Y." }}</p><br>
+            <h3>{{ expense }} in {{ expense.category }}</h3>
+            <p>You spent {{ expense.expense }} rubles to bye {{ expense }}</p>
+            <p>{{ expense.date|date:"d.m.Y." }}</p><br>
             </div>
         {% endfor %}
     <div id="pages" align="center">
 
             {% if expenses.has_previous %}
-                <a href="?page={{ expenses.previous_page_number }}">Previous</a>
+            <a href="?page={{ expenses.previous_page_number }}">Previous</a>
             {% endif %}
 
             <span class="current">
-                Page {{ expenses.number }} of {{ expenses.paginator.num_pages }}.
+            Page {{ expenses.number }} of {{ expenses.paginator.num_pages }}.
             </span>
 
             {% if expenses.has_next %}

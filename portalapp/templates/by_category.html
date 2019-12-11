@@ -2,10 +2,12 @@
 
 {% block content%}
 <h1>Category {{category}} </h1>
-<a href="{% url 'send_email' category.id %}">Send report on this category</a><br>
+<a href="{% url 'send_email' category.id %}">Send report on this category</a>
+<br>
 <h2>Total costs per category are {{amount}} rubles</h2><br>
 {% for expense in all_expenses %}
     <h3>{{expense}}</h3>
-    <p>{{expense.expense}} rubles were spent on this purchase {{ expense.date|date:"d.m.Y." }}</p><br>
+    <p>{{expense.expense}} rubles were spent on this purchase
+        {{ expense.date|date:"d.m.Y." }}</p><br>
 {% endfor %}
 {% endblock%}

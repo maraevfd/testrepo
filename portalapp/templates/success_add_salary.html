@@ -14,7 +14,8 @@
     <h2>You have {{income}} rubles! You can spend it</h2><br>
     <a href='{% url "add_expense" %}'>Add new expense</a>
 {% else %}
-    <h2>I don’t know where you got the money from. Do you live in debt? Your debt is {{income}} rubles</h2>
+    <h2>I don’t know where you got the money from. Do you live in debt?
+        Your debt is {{income}} rubles</h2>
 {% endif %}
 
 {% endblock%}

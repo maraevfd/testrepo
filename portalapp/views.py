@@ -66,7 +66,8 @@ def add_expense(request):
         expense_form = ExpenseForm(data=request.POST)
         if expense_form.is_valid():
             new_expense = expense_form.save()
-            all_expenses = Expense.objects.filter(category__id=new_expense.category.id)
+            all_expenses = Expense.objects.filter(
+                category__id=new_expense.category.id)
             amount = sum([element.expense for element in all_expenses])
             return render(request,
                           'success_add.html',
@@ -102,12 +103,17 @@ def send_email(request, category_id):
             subject = "This is a report by category {}".format(obj.name)
             message = ''
             for expense in expenses:
-                message += '{} {} purchased. Spent {} rubles\n'.format(expense.date,
-                                                                       expense,
-                                                                       expense.expense)
-            message += "Open category {} \n\nAdded comment: {}".format(obj_url,
-                                                                       cd['comment'])
-            send_mail(subject, message, 'admin@mycost_accounting.com', [cd['address']])
+                message += '{} {} purchased. Spent {} rubles\n'.format(
+                    expense.date,
+                    expense,
+                    expense.expense)
+            message += "Open category {} \n\nAdded comment: {}".format(
+                obj_url,
+                cd['comment'])
+            send_mail(subject,
+                      message,
+                      'admin@mycost_accounting.com',
+                      [cd['address']])
             sent = True
     else:
         form = SendEmailForm()

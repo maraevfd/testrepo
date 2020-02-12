@@ -4,4 +4,5 @@
 <h1>You added new expense!</h1>
 <p>You have purchased {{expense.title}} for the sum of {{expense.expense}} rubles<br>successfully added to category {{ expense.category }}</p><br>
 <p>The amount of expenses by category {{ expense.category }} is equal {{amount}} rubles</p>
+<a href='{% url "add_expense" %}'>Add another expense</a><br>
 {% endblock%}

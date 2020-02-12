@@ -10,7 +10,8 @@
             <div>
             <h3>{{ expense }} in {{ expense.category }}</h3>
             <p>You spent {{ expense.expense }} rubles to bye {{ expense }}</p>
-            <p>{{ expense.date|date:"d.m.Y." }}</p><br>
+            <p>{{ expense.date|date:"d.m.Y." }}</p>
+            <a href="delete{{ expense.id }}">Delete expense</a><br>
             </div>
         {% endfor %}
     <div id="pages" align="center">

@@ -3,13 +3,14 @@ from django.shortcuts import render, get_object_or_404, render_to_response
 from portalapp.models import Category, Expense, Salary
 from portalapp.forms import ExpenseForm, CategoryForm, SalaryForm, SendEmailForm
 from django.core.mail import send_mail
+from django.http import HttpResponseRedirect
 
 
 def get_income():
     all_expenses = Expense.objects.all()
     all_salaries = Salary.objects.all()
     income = sum([element.amount for element in all_salaries]) - sum(
-                [element.expense for element in all_expenses])
+        [element.expense for element in all_expenses])
     return income
 
 
@@ -58,7 +59,7 @@ def by_category(request, slug):
     amount = sum([element.expense for element in exp_by_catg])
     return render(request, 'by_category.html', {'all_expenses': exp_by_catg,
                                                 'amount': amount,
-                                                'category': category,})
+                                                'category': category, })
 
 
 def add_expense(request):
@@ -120,3 +121,10 @@ def send_email(request, category_id):
     return render(request, 'send.html', {'category': obj,
                                          'form': form,
                                          'sent': sent})
+
+
+def delete(request, id):
+    expense = Expense.objects.get(id=id)
+    expense.delete()
+
+    return HttpResponseRedirect('/')
